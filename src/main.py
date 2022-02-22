@@ -10,7 +10,7 @@ from sys import exit
 from time import sleep
 from ArgumenHandler import ArgumentHandler
 
-def mainloop(Config):
+def mainloop(config):
     #main
     try:
         browser =  webdriver.Chrome(executable_path='chromedriver')
@@ -20,32 +20,39 @@ def mainloop(Config):
         btnAcceptCookies.click()
 
         FieldSearch = WebDriverWait(browser,30).until(EC.presence_of_element_located((By.XPATH,WebObjects.objects['FieldSearch'])))
-        FieldSearch.send_keys(Config.location)
+        FieldSearch.send_keys(config.location)
         FieldSearch.send_keys(Keys.RETURN)
     except Exception as e:
         print(e.args)
         sys.exit(0)
-
-    for i in range(0, Config.amount,1):
-
-        xpath = WebObjects.objects['BtnHotelFromTable'].replace('#',str(i))
-
-        # btnHotelFromTable = WebDriverWait(browser,30).until(EC.presence_of_element_located((By.XPATH,xpath)))
+    i=0
+    j=0
+    while i < config.amount:
+        xpath = WebObjects.objects['BtnHotelFromTable'].replace('#',str(j))
 
         try:
             hotelUrl = browser.find_element_by_xpath(xpath).get_attribute('href')
+            # print(hotelUrl)
+            browser.get(hotelUrl)
+            sleep(1)
+            # WebDriverWait(browser,30).until(EC.presence_of_all_elements_located())
+            # LblHotelName = WebDriverWait(browser,30).until(EC.presence_of_element_located((By.XPATH,WebObjects.objects['LblHotelName'])))
+            try:
+                lblHotelName = browser.find_element_by_xpath(WebObjects.objects['LblHotelName'])
+                print(lblHotelName.text)
+            except Exception as e:
+                print(e.args)
+                sys.exit(0)
+
+            browser.execute_script('window.history.go(-1)')
+            sleep(2)
+            i = i + 1
         except Exception as e:
-            print(e.args)
+            hotelUrl = ''
 
-        browser.get(hotelUrl)
-        sleep(1)
-        browser.execute_script("window.history.go(-1)")
-        sleep(3)
-
-
-    # browser.close()
+        j = j + 1
 
 if __name__ == "__main__":
-    Config = ArgumentHandler(sys.argv[1:])
-    mainloop(Config)
+    config = ArgumentHandler(sys.argv[1:])
+    mainloop(config)
     sys.exit(0)
