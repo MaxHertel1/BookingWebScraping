@@ -9,6 +9,7 @@ from selenium.webdriver.common.keys import Keys
 from sys import exit
 from time import sleep
 from ArgumenHandler import ArgumentHandler
+from util import Utilities as util
 
 def mainloop(config):
     #main
@@ -42,10 +43,13 @@ def mainloop(config):
 
                 TblFacilities = browser.find_element_by_xpath(WebObjects.objects['TblFacilities'])
                 listElements = TblFacilities.find_elements_by_tag_name('li')
-
+                
+                facilityList=[]
+                k = 0
                 for elem in listElements:
-                    print(i.elem)
+                    facilityList.append(str(elem.text).replace('\n',' - '))
 
+                # print(facilityList)
 
             except Exception as e:
                 print(e.args)
