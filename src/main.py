@@ -35,11 +35,18 @@ def mainloop(config):
             # print(hotelUrl)
             browser.get(hotelUrl)
             sleep(1)
-            # WebDriverWait(browser,30).until(EC.presence_of_all_elements_located())
-            # LblHotelName = WebDriverWait(browser,30).until(EC.presence_of_element_located((By.XPATH,WebObjects.objects['LblHotelName'])))
+            
             try:
                 lblHotelName = browser.find_element_by_xpath(WebObjects.objects['LblHotelName'])
                 print(lblHotelName.text)
+
+                TblFacilities = browser.find_element_by_xpath(WebObjects.objects['TblFacilities'])
+                listElements = TblFacilities.find_elements_by_tag_name('li')
+
+                for elem in listElements:
+                    print(i.elem)
+
+
             except Exception as e:
                 print(e.args)
                 sys.exit(0)
